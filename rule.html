@@ -1,5 +1,4 @@
-# poker
-基于php的斗地主卡牌游戏
+# 斗地主
 ### 游戏牌型及可能值
 1. **单牌**，
     - 可能值：3，4，5，6，7，8，9，10，J,Q,K,A,2,x(小王),X(大王)
@@ -36,37 +35,20 @@
 
 ---
 ### 牌的属性
-<pre>
-{
     type:{
         黑桃：spade
         红桃：heart
         方块：block
         梅花：club
         王：king
-    },
+    }
     value:3-2,xX
-}
-</pre>
 ---
 ### 传值格式
-- group:当前房间
-- current:当前出牌id,
-- status:是否过了，0为过，1为管上
-- win:是否胜利
-- type:牌型
-- number:剩余牌数
-- person:landlord(地主),farmer(农民)
-- data:出的牌
 <pre>
 {
-    group:1,
-    current:2,
-    status：1,
-    win:false,
-    type: two,
-    number:12,
-    person：farmer
+    group:1
+    type: two
     data: [
             {
                 type:heart,
@@ -80,18 +62,3 @@
         
 }
 </pre>
----
-### 牌型大小
-
-**level**:1
-- 牌型：单牌，一堆，三个，四带，顺子，连对，飞机
-
-**level**:2
-- 牌型：四个，炸弹
-
-**level**:3
-- 牌型：王炸
-### 规则
-- 上家出牌，下家出，
-- 牌型必须一致
-- 手中的牌出完则结束

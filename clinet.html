@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="input">
+    <button id="btn">按钮</button>
+</body>
+<script>
+    var ws = null;
+    var currName;
+    currName = prompt('请输入用户名', 'user'+Math.floor(Math.random() * 100000));
+    if ('WebSocket' in window) {
+        ws = new WebSocket("ws://127.0.0.1:9501/");
+    } else {
+        alert('当前浏览器不支持websocket')
+    }
+	ws.onopen = function(){
+        var data = {};
+        data.name = currName;
+        data.data = { type: two data: [ { type:heart, value:3 }, { type:heart, value:3 }]};
+		ws.send(JSON.stringify(data));
+	}
+	ws.onmessage = function(data){
+        console.log(data);
+	}
+	ws.onclose  = function(data){
+        console.log(data);
+        console.log("已断开连接");
+    }
+    ws.onerror = function() {
+        alert("Webscoket连接发生错误");
+    }
+    //当前网页关闭后调用服务器回调
+    window.onbeforeunload = function() {s
+        if(!ws){
+            return;
+        }
+        data = {};
+        data.type="logout";
+        data.name = currName;
+        ws.send(JSON.stringify(data));
+    }
+
+</script>
+
+</html>
