@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="resource/layui/css/layui.css">
+    <link rel="stylesheet" href="resource/css/public.css">
+    <script src="resource/js/jquery.min.js"></script>
+    <script src="resource/layui/layui.all.js"></script>
+</head>
+<style>
+
+</style>
+<body>
+
+	<div class="cont">
+        <div class="banner"></div>
+        <div class="tab" click = "opera.exitRoom()">游戏大厅</div>
+        <div class="index house">
+<!--             <div class="room">
+                <div class="room-photo"></div>
+                <div class="room-description">斗地主</div>
+            </div>
+            <div class="room">
+                <div class="room-photo"></div>
+                <div class="room-description">斗地主</div>
+            </div> -->
+        </div>
+        <div class="detail index" style="display:none">
+             <div class="hander">
+                <div class="hander-list">
+                    <div class="hander-img">
+                        <img src="/resource/images/blue.png" alt="">
+                    </div>
+                    <div class="hander-img">
+                        <img src="/resource/images/blue.png" alt="">
+                    </div>
+                    <div class="hander-img">
+                        <img src="/resource/images/blue.png" alt="">
+                    </div>
+                </div>
+             </div>
+             <div class="left-person person">
+                 <div class="left-icon detail-div" id="role-3">
+                     <div class="icon-detail"><img src="/resource/images/man.png" alt=""></div>
+                     <div class="title">农民</div>
+                 </div>
+                 <div class="poker-background  detail-div">
+                     <div class="number" id="role3"></div>
+                 </div>
+             </div>
+             <div class="right-person person">
+                
+                 <div class="poker-background  detail-div" >
+                     <div class="number" id="role2"></div>
+                 </div>
+                 <div class="right-icon detail-div" id="role-2">
+                     <div class="icon-detail"><img src="/resource/images/man.png" alt=""></div>
+                     <div class="title">农民</div>
+                 </div>
+             </div>
+             <div class="poker-show">
+                 
+                 <div class="poker-detail poker-detail-show">
+                     <img src="/resource/poker/clubs3.jpg" alt="">
+                     <img src="/resource/poker/clubs4.jpg" alt="">
+                     <img src="/resource/poker/clubs5.jpg" alt="">
+
+                 </div>
+             </div>
+             <div class="me-person" >
+                <div class="left-icon detail-div me-detail" id="role-1">
+                     <div class="icon-detail"><img src="/resource/images/man.png" alt="" ></div>
+                     <div class="title" >农民</div>
+                 </div>
+                 <div class="poker-detail me-poker" id="role1">
+                     <!-- <img src="/resource/poker/clubs3.jpg" data-type="heart" data-value="0" alt="">
+                     <img src="/resource/poker/block3.jpg" data-type="block" data-value="1" alt="">
+                     <img src="/resource/poker/clubs4.jpg" data-type="block" data-value="2" alt="">
+                     <img src="/resource/poker/block4.jpg" data-type="block" data-value="3" alt="">
+                     <img src="/resource/poker/clubs5.jpg" data-type="block" data-value="5" alt="">
+                     <img src="/resource/poker/block6.jpg" data-type="block" data-value="6" alt="">
+                     <img src="/resource/poker/clubs6.jpg" data-type="block" data-value="6" alt="">
+                     <img src="/resource/poker/clubs6.jpg" data-type="block" data-value="6" alt="">
+                     <img src="/resource/poker/clubs7.jpg" data-type="block" data-value="7" alt="">
+                     <img src="/resource/poker/block7.jpg" data-type="block" data-value="7" alt="">
+                     <img src="/resource/poker/heart7.jpg" data-type="block" data-value="7" alt="">
+                     <img src="/resource/poker/clubs7.jpg" data-type="block" data-value="7" alt="">
+                     <img src="/resource/poker/clubs8.jpg" data-type="block" data-value="8" alt="">
+                     <img src="/resource/poker/spade8.jpg" data-type="block" data-value="8" alt="">
+                     <img src="/resource/poker/heart8.jpg" data-type="block" data-value="8" alt="">
+                     <img src="/resource/poker/block8.jpg" data-type="block" data-value="8" alt="">
+                     <img src="/resource/poker/block9.jpg" data-type="block" data-value="9" alt="">
+                     <img src="/resource/poker/block10.jpg" data-type="block" data-value="10" alt="">
+                     <img src="/resource/poker/blockJ.jpg" data-type="block" data-value="11" alt=""> -->
+                 </div>
+             </div>
+             <div class="me-play">
+
+             </div>
+        </div>
+        
+    </div>
+</body>
+<script src="resource/js/public.js"></script>
+<script>
+
+    dom = document.getElementsByClassName('poker-detail-show')[0];
+    num = (dom.children.length-1)*14+40;
+    dom.style.marginLeft =(31-num/2)+'px';
+    pullCard = function(){
+        console.log($(this)[0].style.marginTop);
+        if($(this)[0].style.marginTop=='-10px'){
+            $(this).css('margin-top',"0px");
+        }else{
+            $(this).css('margin-top',"-10px");
+        }
+    }
+    // console.log(pokerdata);
+    var ws = null;
+    var role = ['role1',"role2","role3"]
+    var currName;
+    var currNum;//我的id
+    var myCard;//我的牌
+    var endcard=[];//底牌
+    var landed = "地主";
+    var farmar = "农民";
+    var landImg = "/resource/images/lander.png"
+    var farmarImg = "/resource/images/man.png"
+    currName = prompt('请输入用户名', 'user'+Math.floor(Math.random() * 100000));
+    if ('WebSocket' in window) {
+        ws = new WebSocket("ws://127.0.0.1:9501/");
+    } else {
+        alert('当前浏览器不支持websocket')
+    }
+	ws.onopen = function(){
+        var data = {};
+        data.name = currName;
+        data.type = 'login';
+		ws.send(JSON.stringify(data));
+	}
+    /*message数据结构
+    *type:当前消息类型:
+        *login 进入游戏
+        *loginout 登出游戏
+        *enter 进入房间
+        *exit  退出房间
+        *ready 准备游戏 数据结构:0未准备 1准备
+        *putcard  出牌 数据结构:0不要，1出牌
+        *start   开始游戏
+        *end     游戏结束
+    *data
+    */
+
+	ws.onmessage = function(res){
+        console.log(res.data);
+        var msg = JSON.parse(res.data);
+        switch(msg.type){
+            case "login":
+                    var dom = $('.house');
+                    if(msg.name == currName){
+                        msg.group.forEach(function(item,index){
+                            var div = '<div class="room" onclick = "opera.enterRoom('+index+')">'+
+                                      '<div class="room-description">斗地主</div>'+
+                                       '</div>';
+                            dom.append(div);
+     
+                        })
+                    }
+                    console.log(msg.name+"上线了");
+                    break;
+            case "loginout":break;
+            case "enter":
+                if(msg.name == currName){
+                    opera.resetBtn(msg.operation);
+                    currGroup = msg.group;
+                    $('.house').hide();
+                    $('.detail').show();
+                }
+                break;
+            case "exit":break;
+            case "ready":
+                if(msg.name == currName){
+                    opera.resetBtn(msg.operation);
+                }
+                break;
+            case "putcard":
+                    var card = msg.card[0];
+                    var endcard = msg.card[1];
+                    $('.me-play').html("");
+                    card.forEach(function(item,index){
+                        if(item.name == currName){
+                            if(index == msg.currgroup.start){
+                                console.log(index);
+                                opera.resetBtn(msg.operation,[index]);
+                            }
+                            currNum = index;
+                            myCard = opera.getCard(item.card);
+
+                        }
+                    })
+                    opera.setCard(card);
+                    break;
+            case "start":
+                $('.me-play').html("");
+                opera.setCard(msg.currgroup.card[0],msg.currgroup.lander);
+                var endCard =opera.getCard(msg.currgroup.card[1]);
+                var img = $(".hander-img");
+                endCard.forEach(function(item,index){
+                    var url = "/resource/poker/"+item.type+item.value+".jpg";
+                    img[index].children[0].src=url;
+                })
+                if(msg.currgroup.lander == currNum){
+                    opera.resetBtn(msg.operation);
+                }
+                break;
+            case "end":break;
+            case "call":
+                console.log(msg);
+                $('.me-play').html("");
+                if(msg.name = currName){
+                    console.log(msg.currgroup.start);
+                    msg.currgroup.card[0].forEach(function(item,index){
+                        if(index == msg.currgroup.start && item.name == currName){
+                            opera.resetBtn(msg.operation,[index]);
+                        }
+                    })
+                }
+                break;
+            case "error":
+
+                if(msg.name == currName){
+                    alert(msg.message)
+                }
+                break;
+        }
+
+	}
+	ws.onclose  = function(data){
+        console.log(data);
+        console.log("已断开连接");
+    }
+    ws.onerror = function() {
+        alert("Webscoket连接发生错误");
+    }
+    //当前网页关闭后调用服务器回调
+    window.onbeforeunload = function() {
+        if(!ws){
+            return;
+        }
+        data = {};
+        data.type="logout";
+        data.name = currName;
+        ws.send(JSON.stringify(data));
+    }
+    /*
+        *getCard   获得当前牌 data:  牌id数组
+        *enterRoom 进入房间   index：当前组id
+        *exitRoom  退出房間
+        *resetBtn  重绘按钮   data: 按钮数组
+     */
+    var opera = {
+        getCard:function(data){
+            var arr = [];
+            data.forEach(function(item,index){
+                arr.push(pokerdata[item]);
+            })
+            return arr;
+        },
+        enterRoom: function(index){
+            data = {};
+            data.type = "enter";
+            data.name = currName;
+            data.group = index;
+            ws.send(JSON.stringify(data));
+        },
+        exitRoom: function(){
+            $(".house").show();
+            $(".detail").hide();
+        },
+        resetBtn: function(data,arr=[]){
+            console.log(arr);
+            var dom = $('.me-play');
+            dom.html("");
+            console.log(data);
+            data.forEach(function(item){
+                var btn = "<button onclick='opera."+operation[item].func+"(";
+                for(var i=0;i<arr.length;i++){
+                    btn += "\""+arr[i]+"\"";
+                    if(i+1<arr.length){
+                        btn +=","
+                    }
+                }
+                if(typeof(operation[item].value)!=="undefined")
+                {
+                    btn += ",\""+operation[item].value+"\"";
+                }
+                btn += ")'>"+operation[item].name+"</button>";
+                dom.append(btn);
+            })
+        },
+        goReady:function(){
+            data.type = "ready";
+            data.name = currName;  
+            data.group = currGroup;  
+            ws.send(JSON.stringify(data));
+        },
+        callLand:function(index,opr){
+            data.type="call";
+            data.name = currName;
+            data.group = currGroup;
+            data.value = index;
+            data.opera = opr;  
+            console.log(data);          
+            ws.send(JSON.stringify(data));
+
+        },
+        setCard:function(card,lander="-1"){            
+            var index = currNum;
+            myCard = opera.getCard(card[index].card);
+            for(var i=0;i<3;i++){
+                if(index==3){
+                    index=0;
+                }
+
+                var dom = $("#"+role[i]);
+                dom.html("");
+                if(card[index].card.length == 20){
+                    $("#role-"+(i+1)).children()[0].children[0].src=landImg;
+                    $('#role-'+(i+1)).children()[1].innerHTML = landed;
+                }
+                if(i==0){
+                    myCard.sort(check.sort).forEach(function(item,index){
+                        var img = '<img src="/resource/poker/'+item.type+item.value+'.jpg" data-type="'+item.type+'" data-value="'+item.value+'" data-level="'+item.level+'" alt="">';
+                        dom.append(img);
+                    })
+
+                }else{
+                    dom.append(card[index].card.length);
+                }
+                index++;
+
+
+            }
+            $('.me-poker>img').click(pullCard);
+        },
+
+        putPoker:function (){
+            var list = [];
+            $.each($('.me-poker>img'),function(index,item){
+                var obj = {};
+                if($(item)[0].style.marginTop=="-10px"){
+                        obj.type = $(item).data('type');
+                        obj.value = $(item).data('value');
+                        obj.level = $(item).data('level');
+                        list.push(obj);
+                    
+                }
+            })
+            console.log(list);
+            data = check.type(list);
+            var msg = {};
+            msg.type = "play";
+            msg.name = currName;
+            msg.data = data;
+            msg.group = currGroup;
+            ws.send(JSON.stringify(data));
+    }
+
+
+
+
+    }
+</script>
+
+</html>

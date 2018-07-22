@@ -1,0 +1,205 @@
+body{
+    background:#272822;
+}
+::-webkit-scrollbar{
+    display: none;
+}
+.cont{
+    position: absolute;
+    left:50%;
+    top:5%;
+    margin-left: -200px;
+    width:400px;
+    height:550px;
+    /*background: white;*/
+
+    background: url(../images/index.png);
+    background-size:cover;
+
+}
+.banner{
+    background: url(../images/banner.png);
+    background-size: 100% 100%;
+    width:100%;
+    height:100px;
+}
+.tab{
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px;
+    width:100%;
+    display: inline;
+    height:20px;
+    line-height: 20px;
+}
+.index{
+    /*padding:20px;*/
+    width:100%;
+    min-height:430px;
+    overflow-y: scroll;
+    position: relative;
+
+}
+.room{
+    width:170px;
+    height:100px;
+    padding:5px 0;
+    border:1px solid red;
+    float: left;
+    margin-top: 20px;
+
+    margin-left: 20px;
+}
+.room-description{
+    height:100px;
+    width:100%;
+    line-height: 100px;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+.detail{
+    overflow:hidden;
+}
+.hander{
+    margin-left: 25%;
+    width:50%;
+    height: 50px;
+    /*border:1px solid red;*/
+    margin-top: 10px;
+    margin-bottom: 20px;
+
+
+}
+.hander-list{
+    width:100%;
+    height: 50px;
+    display: inline;
+
+}
+.hander-img{
+    /*background:url('../images/blue.png');*/
+    background-size: 100% 100%;
+    height:40px;
+    width:20%;
+    float: left;
+    margin-left: 10%;
+    margin-top: 5px;
+}
+.hander-img img{
+    height:40px;
+    width:100%;
+}
+.person{
+    width:30%;
+    height:100px;
+    /*border:1px solid red;*/
+    float: left;
+    margin-bottom: 20px;
+    display: inline;
+    padding:5px;
+}
+.detail-div{
+    width:45%;
+    height:100px;
+    /*border:1px solid red;*/
+    float: left;
+}
+.left-icon{
+}
+.right-icon{
+}
+.icon-detail{
+    /*display: inline;*/
+    padding:20px 7px 0 7px;; 
+    width:40px;
+    height:40px;
+}
+.title{
+    padding:0px 7px 0 7px;
+    width:40px;
+    height:40px;
+    text-align: center;
+    /*font-size: 10px;*/
+}
+.poker-background{        
+    padding:20px 7px 0 7px;
+    width:40px;
+    height:80px;
+}
+.icon-detail>img{
+    height:100%;
+    width:100%;
+}
+.left-person{
+    float: left;
+    padding-left:10px;
+}
+.right-person{
+    float: right;
+}
+.poker-background{
+}
+.number{
+
+    padding:0px 7px 0 7px;; 
+    background: url('../images/blue.png');
+    background-size: 100% 100% ;
+    height:60px;
+    font-size: 18;
+    font-weight: 700;
+    line-height: 60px;
+    text-align: center;
+}
+.poker-show{
+    clear: both;
+    position: relative;
+    width:100%;
+    height:100px;
+    /*border:1px solid red;*/
+}
+.poker-detail-show{
+    min-width: 40px;
+    height:100px;
+    position: absolute;
+    left:50%;
+    margin:auto auto;
+
+}
+.me-person{
+    position: absolute;
+    bottom:0;
+    width:100%;
+    height:100px;
+    /*border:1px solid red;*/
+}    
+.me-play{
+    position: absolute;
+    bottom:100px;
+    left:50%;
+    margin-left: -150px;
+    width:300px;
+    height:20px;
+    /*border:1px solid red;*/
+    text-align: center;
+}
+.me-detail{
+    margin-left:10px;
+    width:60px;
+}
+.poker-detail{
+    display: inline;
+    margin-left: 40px;
+}
+.poker-detail>img{
+    /*margin-top: 20px;*/
+    width:40px;
+    height:50px;
+}
+.poker-detail>img:nth-child(n){
+    margin-left: -31px;
+}
+.me-poker{
+    padding-top:20px;
+    display: inline-block;
+}
