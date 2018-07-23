@@ -1,6 +1,6 @@
 <?php 
 return [
-        "card":[
+        "card"=>[
             ['type' => 'heart', 'value' => '3',  'level' => 1  ],
             ['type' => 'heart', 'value' => '4',  'level' => 2  ],
             ['type' => 'heart', 'value' => '5',  'level' => 3  ],
