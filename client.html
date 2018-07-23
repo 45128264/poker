@@ -265,6 +265,7 @@
             var arr = [];
             data.forEach(function(item,index){
                 arr.push(pokerdata[item]);
+                arr[arr.length-1]['index'] = item;
             })
             return arr;
         },
@@ -331,8 +332,9 @@
                     $('#role-'+(i+1)).children()[1].innerHTML = landed;
                 }
                 if(i==0){
+
                     myCard.sort(check.sort).forEach(function(item,index){
-                        var img = '<img src="/resource/poker/'+item.type+item.value+'.jpg" data-type="'+item.type+'" data-value="'+item.value+'" data-level="'+item.level+'" alt="">';
+                        var img = '<img src="/resource/poker/'+item.type+item.value+'.jpg" data-type="'+item.type+'" data-value="'+item.value+'" data-level="'+item.level+'" data-index="'+item.index+'" alt="">';
                         dom.append(img);
                     })
 
@@ -348,24 +350,26 @@
 
         putPoker:function (){
             var list = [];
+            var arr = [];//出牌id
             $.each($('.me-poker>img'),function(index,item){
                 var obj = {};
                 if($(item)[0].style.marginTop=="-10px"){
                         obj.type = $(item).data('type');
                         obj.value = $(item).data('value');
                         obj.level = $(item).data('level');
+                        arr.push($(item).data('index'));
                         list.push(obj);
                     
                 }
             })
-            console.log(list);
-            data = check.type(list);
+            var data = check.type(list);
+            data.list = arr;
             var msg = {};
             msg.type = "play";
             msg.name = currName;
             msg.data = data;
             msg.group = currGroup;
-            ws.send(JSON.stringify(data));
+            ws.send(JSON.stringify(msg));
     }
 
 
@@ -373,5 +377,4 @@
 
     }
 </script>
-
 </html>

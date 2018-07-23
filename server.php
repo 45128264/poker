@@ -1,4 +1,3 @@
-
 <?php
 define('cfg', include_once('config.php'));
 include_once('./json.php');
@@ -90,13 +89,16 @@ class Poker {
                     break;
             case 'loginout':break;
             case 'play':
-                $card = $m['data'];
+                $card = $data['data'];
                 //判断牌型是否正确
                 $thegroup = &$this->group[$data['group']];
-                if($iscard = isTrueCard($card['data'])){
+                var_dump($card['list']);
+                var_dump($card['data']);
+                var_dump($this->isTrueCard($card['data']));
+                if($iscard = $this->isTrueCard($card['data'])){
                     if($thegroup['prep']){
-                        if(dataHandle($thegroup['prep'],$iscard)){
-                            delCard($frame->fd,$card['list']);
+                        if($this->dataHandle($thegroup['prep'],$iscard)){
+                            $this->delCard($frame->fd,$card['list']);
                             $thegroup['prep'] = $iscard['data'];
 
                             $user = [];
@@ -263,8 +265,8 @@ class Poker {
     */
     public function delCard($id,$data){
         $card = &$this->userlist[$id]['card'];
-        forEach($data as $v){
-            $offset = array_search($v,$card)
+        foreach($data as $v){
+            $offset = array_search($v,$card);
             array_splice($card,$offset,1);
         }
     }
@@ -272,10 +274,10 @@ class Poker {
     public function repeat($data){
         $list = [];
         $arr = [];
-        forEach($data as $item){
+        foreach($data as $item){
             $key = $arr.indexOf($item['level']);
             if($key == -1){
-                $obj = {};
+                $obj = [];
                 $obj['level']=$item['level'];
                 $obj['num']=1;              
                 array_push($arr,$item['level']);
@@ -283,20 +285,23 @@ class Poker {
             }else{
                 $list[$key]['num']++;
             }
-        })
+        }
         return $list;
     }
     //牌型确认
     public function isTrueCard ($data){
         //从小到大排序,数组反转
         $list = $data;
-        $arr = (array_sort($this->repeat($list)),'num',SORT_DESC);
-        $current ={};
-        $isKing = [20,30]        
+        $arr = array_sort($this->repeat($list),'num',SORT_DESC);
+        $current =[];
+        $isKing = [20,30];        
         $current['data'] = $list;
         if(count($arr)==0){
             return false;
         }
+        echo "-----------------------";
+        echo $list;
+        echo "-----------------------";
         switch($arr[0]['num']){
             case 1:
                 if(count($list) == 1){
@@ -304,7 +309,7 @@ class Poker {
                     $current['level'] = $arr[0]['level'];
                     $current['other'] = '';
                     break;
-                }else if(array_search($isKing,$list[0]['level']) != -1 && array_search($isKing,$list[0]['level'] != -1 &&  count($list) == 2){
+                }else if(array_search($isKing,$list[0]['level']) != -1 && array_search($isKing,$list[0]['level']) != -1 &&  count($list) == 2){
                     $current['type'] = 'kingtwo';
                     break;
                 }else if(count($list) > 4 ){
@@ -328,7 +333,7 @@ class Poker {
                     //以arr降序排列，进行顺子筛选和单牌数量筛选
                     $sarr =  array_filter($this->cardfilter(array_sort($arr,'level',SORT_DESC), function($v, $k) {
                             return $v['num']==2;
-                        }, ARRAY_FILTER_USE_BOTH);
+                        }, ARRAY_FILTER_USE_BOTH));
                     if(count($sarr) == count($arr)){
                         $current['type'] = 'twomore';
                         $current['len'] = count($arr);
@@ -348,9 +353,9 @@ class Poker {
                         }, ARRAY_FILTER_USE_BOTH);
 
                         $val = 0;
-                        forEach($arr as $k=>$v){
+                        foreach($arr as $k=>$v){
                             $val += $v['num'];
-                        })
+                        }
                         $onenum = $val-count($threeArr)*3;
                         if($onenum==0 && count($threeArr) > 1){
                             $current['type'] = 'threemore';
@@ -365,7 +370,7 @@ class Poker {
                             $darr = $this->cardfilter(array_sort($threeArr,'level',SORT_DESC));
                             if(count($darr) == count($threeArr)){
                                 $current['type'] = 'threemore';
-                                $current['len'] = count($threeArr)
+                                $current['len'] = count($threeArr);
                                 break;
                             }
                         }
@@ -382,9 +387,9 @@ class Poker {
                             return $v['num']==4;
                         }, ARRAY_FILTER_USE_BOTH);
                     $val = 0;
-                    forEach($arr as $k=>$v){
+                    foreach($arr as $k=>$v){
                         $val += $v['num'];
-                    })
+                    }
                     $onenum = $val-$count($fourArr)*4;;
                     if($onenum==0 && count($fourArr) > 1){
                         $current['type'] = 'fourmore';
