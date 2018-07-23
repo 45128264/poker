@@ -1,4 +1,3 @@
-
 <?php
 define('cfg', include_once('config.php'));
 include_once('./json.php');
